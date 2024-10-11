@@ -1,0 +1,63 @@
+﻿@page "/Employees"
+@using EmployeeCrudBlazor.Models
+@using EmployeeCrudBlazor.Data
+@inject EmployeeService employeesService
+
+<NavLink class="nav-link" href="AddNewEmployee">
+    <span class="oi oi-plus" aria-hidden="true">Add New Employee</span>
+</NavLink>
+
+<h3>Employees List</h3>
+
+@if (EmployeeObject is null)
+{
+    <p><em>Loading.....</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Emp No</th>
+                <th>Emp Name</th>
+                <th>Email Address</th>
+                <th>Designation</th>
+                <th>Phone Number</th>
+                <th>Edit</th>
+                <th>Delete</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var employee in EmployeeObject)
+            {
+                <tr>
+                    <td>@employee.Id</td>
+                    <td>@employee.FullName</td>
+                    <td>@employee.EmailAddress</td>
+                    <td>@employee.Designation</td>
+                    <td>@employee.PhoneNumber</td>
+                    <td>
+                        <a class="nav-link btn btn-primary" style="width:60%;" href="EditEmployee/@employee.Id">
+                            <span class="oi oi-pencil" style="width:100%;" aria-hidden="true"> Edit</span>
+                        </a>
+                    </td>
+                    <td>
+                        <a class="nav-link btn btn-danger" style="width:60%;" href="DeleteEmployee/@employee.Id">
+                            <span class="oi oi-trash" style="width:100%;" aria-hidden="true"> Delete</span>
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    List<Employee> EmployeeObject;
+
+    protected override async Task OnInitializedAsync()
+    {
+        EmployeeObject = await Task.Run(() => employeesService.GetAllEmployees());
+    }
+}
+
